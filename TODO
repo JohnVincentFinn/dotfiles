@@ -1,0 +1,5 @@
+
+write syntastic include script to run when a new workspace is created
+allow jumping to recently used directories instead of just directories that were saved
+get coverity vim plugin
+

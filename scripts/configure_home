@@ -1,0 +1,43 @@
+
+source ~/.files/global
+
+function link_files() {
+    local new_backup_directory backedup_files
+    new_backup_directory=${backup_directory}/$(date +"%B-%d")
+    i=0
+    for directory in ${new_backup_directory}/*; do
+        i+=1
+    done 
+    if [ ! ${i} -eq "0" ]; then
+        ${new_backup_directory}=${new_backup_directory}-${i}
+    fi
+    mkdir ${new_backup_directory}
+
+	for file in ${link_directory}/*; do
+        if [ -a ~/.${file##*/} ]; then
+            mv ~/.${file##*/} ${new_backup_directory}/${file##*/}
+        fi
+		ln -s ${file} ~/.${file##*/}
+	done
+
+    backedup_files=${new_backup_directory}/*
+    if [ ${backedup_files[*]} -eq 0 ]; then
+        rm -rf ${new_backup_directory}
+    else
+        echo "${backedup_files[*]} files were backed up due to name clashes."
+        echo "they can be found in ${new_backup_directory}"
+    fi
+
+}
+
+link_files
+
+function install_git_repos() {
+    echo "not yet implemented"
+    return
+    echo "-> installing wemux"
+    git clone git://github.com/zolrath/wemux.git ~/.files/extensions/wemux
+
+
+}
+

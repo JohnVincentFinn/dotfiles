@@ -1,0 +1,3 @@
+
+autocmd VimEnter * if filereadable("${CSCOPE_DB}") | CCTreeLoadDB ${CSCOPE_DB} | endif
+
