@@ -1,3 +1,6 @@
+# adds certain bash completion stuff
+
+
 
 #source ~/.files/bashrc.d/.bash_completion/bash_completion
 

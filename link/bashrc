@@ -1,0 +1,19 @@
+
+# If not running interactively, don't do anything
+[[ $- != *i* ]] && return
+
+alias ls='ls --color=auto'
+PS1='[\u@\h \W]\$ '
+
+export EDITOR="vim"
+export PATH=$PATH:~/bin
+
+export PATH=${PATH}:~/.local/bin
+
+for i in `ls ~/.files/bashrc.d/`; do
+    source ~/.files/bashrc.d/$i
+done
+
+source ~/.bashrc_USER
+
+

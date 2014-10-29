@@ -1,12 +1,7 @@
 
-
-
 " Misc settings
 
 source ~/.vim/bundles.vim
-
-let g:syntastic_cpp_config_file = ".syntastic_cpp_config"
-let g:syntastic_cpp_no_default_include_dirs = 1             " usually these headers won't be used for compiling
 
 set number                    " Shows the line number on the left
 set autoindent                " When you hit enter automatically be indented the correct amount
@@ -20,7 +15,8 @@ set hlsearch                  " when you search highlight what you just searched
 set visualbell                " Dont make an annoying ping when you do something wrong
 set encoding=utf-8
 set fileencoding=utf-8
-color torte                   " the torte scheme is personal preference but there are lots of good color schemes
+color darkblue                " the torte scheme is personal preference but there are lots of good color schemes
+syntax on                     " Syntax highlighting is useful
 
 filetype plugin on
 "autocmd ColorScheme * highlight ColorColumn ctermbg=235 guibg=#2c2d27
@@ -28,8 +24,6 @@ filetype plugin on
 "let &colorcolumn=join(range(81,90),",")
 "match ErrorMsg '\%>91v.\+'
 "
-
-"set rtp+=/user/johnfinn/.vim/bundle/calendar.vim/autoload/calendar
 
 highlight OverLength ctermbg=red ctermfg=white guibg=#592929
 function OverLength()
@@ -44,23 +38,13 @@ function Colorfind()
     match FindColor  /\(\%#.*\)\@<=f/
 endfunction
 
-" nnoremap ; ToggleMacro
-" nnoremap , ExecuteMacro
-
 " qq - record macro
 " q  - stop recording macro
 " Q  - replay macro
 noremap Q @q
 
-" Tlist settings
-let Tlist_Use_Right_Window   = 1
-let Tlist_Exit_OnlyWindow    = 1
-let Tlist_Display_Prototype  = 1
-let Tlist_WinWidth = 55
-let Tlist_Auto_Highlight_Tag = 0
-
 " powerline settings
-let g:Powerline_symbols = "fancy"
+"let g:Powerline_symbols = "fancy"
 
 " mappings
 nnoremap <silent> <F8> :TlistToggle<CR>
@@ -69,15 +53,5 @@ nnoremap <silent> <F9> :NERDTreeToggle<CR>
 nmap <silent> <C-n> :tabnext<CR>
 nmap <silent> <C-p> :tabprev<CR>
 
-" status line settings
-set statusline=%f
-set statusline+=\ -\
-set statusline+=FileType
-set statusline+=%y
-
-
-"CCTreeTraceReverse <symbolname>
-"CCTreeTraceForward <symbolname>
-"CCTreeRecurseDepthPlus   
-"CCTreeRecurseDepthMinus  
+nnoremap <leader>. :CtrlPTag<cr>
 

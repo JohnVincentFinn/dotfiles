@@ -6,60 +6,62 @@
 set nocompatible
 filetype off
 
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
 
-Bundle 'gmarik/vundle'
+Plugin 'gmarik/Vundle.vim'
 
 
 "Misc
 "" General Utility Functions
-Bundle 'genutils'
+Plugin 'genutils'
 
-"" power line
-Bundle 'Lokaltog/vim-powerline'
+"" required by powerline
+Plugin 'gundo'
 "Revision control
 "" git integration
-Bundle 'tpope/vim-fugitive'
+Plugin 'tpope/vim-fugitive'
 "" perforce integration
-"Bundle 'perforce'
+"Plugin 'perforce'
 
 "" static analysis
-Bundle 'scrooloose/syntastic'
+Plugin 'scrooloose/syntastic'
+source ~/.vim/vim.d/syntastic
 "" file browsing
-Bundle 'scrooloose/nerdtree'
+Plugin 'scrooloose/nerdtree'
 " Generates callgraphs
-Bundle 'cctree'
+Plugin 'cctree'
 source ~/.vim/vim.d/cctree
 
 "
-Bundle 'vim-scripts/taglist.vim'
+Plugin 'vim-scripts/taglist.vim'
 "" fuzzy file finder
-Bundle 'kien/ctrlp.vim'
+Plugin 'kien/ctrlp.vim'
 "" opens header file of current file
-Bundle 'vim-scripts/a.vim'
+Plugin 'vim-scripts/a.vim'
 "
 "" adds c snippets and commenting support
-Bundle 'c.vim'
-Bundle 'itchyny/calendar.vim'
-"Bundle 'mattn/calendar.vim'
+Plugin 'c.vim'
+"" Calendar plugin
+Plugin 'itchyny/calendar.vim'
 
 " Outliner
-Bundle 'VOoM'
+Plugin 'VOoM'
 
 "gcov file highlighting
-Bundle 'gcov.vim'
+Plugin 'gcov.vim'
 
 " rally support
 " Need to compile vim with ruby support to use it
-"Bundle 'davidpthomas/vim4rally'
+"Plugin 'davidpthomas/vim4rally'
 
 " fast jumping around
-" Bundle 'Lokaltog/vim-easymotion'
+" Plugin 'Lokaltog/vim-easymotion'
 
-" colorscheme
-Bundle 'flazz/vim-colorschemes'
+" lots of colorschemes
+Plugin 'flazz/vim-colorschemes'
 
+call vundle#end()
 filetype plugin on
 filetype indent on
 syntax on
@@ -67,4 +69,4 @@ syntax on
 " if it breaks
 " export GIT_SSL_NO_VERIFY=true
 "
-" to install to :BundleInstall
+" to install to :PluginInstall

@@ -13,15 +13,15 @@ alias lscd="cdls"
 alias vi="vim"
 
 #make everything human readable by default
-alias df='df -h'
-alias du='du -h'
+alias df='df --human-readable'
+alias du='du --human-readable'
 alias ls='ls --color=auto'
 
 # make everything safe
 alias rm="rm --preserve-root"
-alias cp='cp -i'
-alias mv='mv -i'
-alias ln='ln -i'
+alias cp='cp --interactive'
+alias mv='mv --interactive'
+alias ln='ln --interactive'
 alias chown='chown --preserve-root'
 alias chmod='chmod --preserve-root'
 alias chgrp='chgrp --preserve-root'
@@ -34,15 +34,15 @@ alias .....='cd ../../../..'
 alias -- -='cd -'
 
 # prevent a mistake I constantly make aka "cd cd directory"
-function cd() {
-    local folder_name
-    if [ "cd" == "$1" ]; then
-        folder_name="$2"
-    else
-        folder_name="$1"
-    fi
-    command cd ${folder_name}
-}
+# function cd() {
+#     local folder_name
+#     if [ "cd" == "$1" ]; then
+#         folder_name="$2"
+#     else
+#         folder_name="$1"
+#     fi
+#     command cd ${folder_name}
+# }
 
 # execute both of these commands quicker
 function cdls() {
@@ -114,7 +114,7 @@ function cscope_generate() {
              -o -name '*.cpp' \
              -o -name '*.cxx' > cscope.files
     if [ $? == 127 ]; then
-        rm cscope.files
+        rm cscope.files > /dev/null
     else
         cscope -b -q
     fi
@@ -132,13 +132,18 @@ function bd() {
 
     prev_prev_dir=${OLDPWD}
     prev_dir=${PWD}
-    while [ / != "${PWD}" ]; do
+    while :; do
         if [ -e "${file_name}" ]; then
             cd ${file_name}
             OLDPWD=${prev_dir}
             return
         fi 
-        cd ..
+
+        if [ / == "${PWD}" ]; then
+            break;
+        else
+            cd ..
+        fi
     done
 
     cd ${prev_dir}
@@ -147,21 +152,26 @@ function bd() {
 }
 
 # add tab completion
+# Currently folder names with spaces and tab completing multiple levels are broken
 _bd() {
-    COMPREPLY=( $(compgen -d ${COMP_WORDS[COMP_CWORD]}) )
+    COMPREPLY=( $(compgen -d "${COMP_WORDS[COMP_CWORD]}") )
 
     prev_prev_dir=${OLDPWD}
     prev_dir=${PWD}
-    while [ / != "${PWD}" ]; do
+    while :; do
         COMPREPLY+=( $(compgen -d "${COMP_WORDS[COMP_CWORD]}") )
-        cd ..
+        if [ / == "${PWD}" ]; then
+            break;
+        else
+            cd ..
+        fi
     done
 
     cd ${prev_dir}
     OLDPWD=${prev_prev_dir}
 }
 
-complete -F _bd bd
+complete -o nospace -F _bd -S / bd
 
 shopt -s extglob
 

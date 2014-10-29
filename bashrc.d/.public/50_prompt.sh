@@ -4,18 +4,12 @@
 export PS1="\[\e[1;34m\][\A]\[\e[0m\] \h \w$ "
 export PS2="| "
 
-#information_color=$(eval \$$prompt_colors[0])
-#bracket_color=$(eval \$$prompt_colors[1])
-#error_color=$(eval \$$prompt_colors[2])
-#clock_color=$(eval \$$prompt_colors[3])
-#terminator_color=$(eval \$$prompt_colors[4])
-
 #if [[ ! "${prompt_colors[@]}" ]]; then
   prompt_colors=(
-    "${White}" # information color
+    "${White}"  # information color
     "${BWhite}" # bracket color
-    "${Red}"  # error color
-    "${Red}"  # clock color
+    "${Red}"    # error color
+    "${Red}"    # clock color
 
   )
 #fi
@@ -37,22 +31,8 @@ export PS2="| "
 #}
 
 
-save_cursor="\[\033[s\]"
-load_cursor="\[\033[u\]"
-
 # Inside a prompt function, run this alias to setup local $c0-$c9 color vars.
 alias prompt_getcolors='prompt_colors[9]=; local i; for i in ${!prompt_colors[@]}; do local c$i="${prompt_colors[$i]}"; done'
-
-# put something in  the upper right of the terminal
-# prototype
-function upper_right() {
-  prompt_getcolors
-  if [ -n "$1" ]; then
-      t=$(echo -e $1)
-      echo -e $1
-    echo "${save_cursor}\[\033[1;\$((COLUMNS-${#t}))f\]$1${load_cursor}"
-  fi
-}
 
 # Exit code of previous command.
 function prompt_exitcode() {
@@ -70,24 +50,6 @@ function prompt_clock() {
 
   echo "$c1[$c4$(date +"%H$c1:$c4%M$c1")$c1]$c9"
 }
-
-function present_working_directory() {
-    # options:
-    # type of highlighting
-    # highlight the workspace name
-    # highlight the workspace path
-    #if [ ! -z "${current_workspace_name}" && `expr index "${PWD}" "${current_workspace_name}"` > 1 ]; then
-    #    echo "${PWD%${current_workspace_name}*}\
-    #    ${White}${current_workspace_name}\
-    #    ${BWhite}${PWD#*${current_workspace_name}}"
-    #fi
-    echo "not yet implemented"
-}
-
-function basic_prompt() {
-    PS1="$(prompt_clock) \h \w${prompt_terminator} "
-}
-
 
 # Git status.
 function prompt_git() {
@@ -123,24 +85,18 @@ function prompt_svn() {
   fi
 }
 
-# Maintain a per-execution call stack.
-prompt_stack=()
-trap 'prompt_stack=("${prompt_stack[@]}" "$BASH_COMMAND")' DEBUG
+function basic_prompt() {
+    prompt_getcolors
+    PS1="$(prompt_clock) \h \w${prompt_terminator} "
+}
 
-function prompt_command() {
+function complex_prompt() {
+  prompt_getcolors
   local exit_code=$?
-  # If the first command in the stack is prompt_command, no command was run.
-  # Set exit_code to 0 and reset the stack.
-  [[ "${prompt_stack[0]}" == "prompt_command" ]] && exit_code=0
-  prompt_stack=()
 
   # Manually load z here, after $? is checked, to keep $? from being clobbered.
   #[[ "$(type -t _z)" ]] && _z --add "$(pwd -P 2>/dev/null)" 2>/dev/null
 
-  # While the simple_prompt environment var is set, disable the awesome prompt.
-  [[ "$simple_prompt" ]] && PS1='\n$ ' && return
-
-  prompt_getcolors
 
   PS1="\n"
   repository_data=""
@@ -160,8 +116,6 @@ function prompt_command() {
   # exit code: 127
   #PS1="$PS1$(prompt_exitcode "$exit_code")$c9"
 
-  #PS1="$PS1$(_upper_right "${repository_data}")"
-
   # end of the prompt
   PS1="$PS1${prompt_terminator} $c0"
 }
@@ -173,8 +127,9 @@ PROMPT_COMMAND=basic_prompt # this essentially overwrites PS1
 function switch_prompt() {
     if [ "$1" == "basic" ]; then
         PROMPT_COMMAND=basic_prompt;
-    elif [ "$1" == "experimental" ]; then
-        PROMPT_COMMAND=prompt_command;
+    elif [ "$1" == "complex" ]; then
+        PROMPT_COMMAND=complex_prompt;
     fi
 }
+
 

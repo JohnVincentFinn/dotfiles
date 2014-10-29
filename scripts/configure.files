@@ -32,12 +32,31 @@ function link_files() {
 
 link_files
 
+# reinstall vundle stuff
+vim +PluginInstall +qall
+
+ln -s scripts/.wemux/wemux scripts/wemux
+
 function install_git_repos() {
     echo "not yet implemented"
     return
     echo "-> installing wemux"
     git clone git://github.com/zolrath/wemux.git ~/.files/extensions/wemux
+    git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+    git clone https://github.com/Lokaltog/powerline.git
+    cd powerline
+    ln -s {powerline_path}/scripts/powerline ~/.local/bin
+    cd ..
 
+    git clone https://github.com/kovidgoyal/powerline-daemon.git
+    cd powerline-daemon
+    gcc -O3 powerline-client.c -o powerline-client
+    chmod +x powerline-daemon
+    ln -s powerline-daemon ~/.local/bin
+    ln -s powerline-client ~/.local/bin
+    cd ..
 
+    https://github.com/Lokaltog/powerline-fonts.git
 }
+
 

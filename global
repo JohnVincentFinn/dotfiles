@@ -1,7 +1,7 @@
 
 # global variables
 
-# this should be located in either ~/.files or ~
+# this should be located in either ~/.files
 # it sets the paths of the other directories so it cant
 # actually be located in them.
 

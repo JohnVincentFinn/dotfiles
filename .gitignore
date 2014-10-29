@@ -1,0 +1,6 @@
+# ignore everthing in bashrc.d
+/bashrc.d/*
+!/bashrc.d/.public/*
+# ignore the plugins installed by vundle
+/link/vim/bundle/*
+!/link/vim/bundle/Vundle.vim

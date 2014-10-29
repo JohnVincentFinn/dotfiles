@@ -1,1 +1,8 @@
-let TList_Use_Right_Window  = 1
+
+" Tlist settings
+let Tlist_Use_Right_Window   = 1
+let Tlist_Exit_OnlyWindow    = 1
+let Tlist_Display_Prototype  = 1
+let Tlist_WinWidth = 55
+let Tlist_Auto_Highlight_Tag = 0
+

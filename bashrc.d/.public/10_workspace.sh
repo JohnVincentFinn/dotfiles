@@ -15,21 +15,19 @@
 # list_memories
 #
 # limitations:
-# Removing workspaces isn't really implemented so it has to be done by hand
 # workspaces must have unique names they cannot just be unique per machine
 # cannot yet learn new files that are comonly used 
 # you must jump into a workspace. It cannot automatically be discovered
-# prompt integration is not complete
 #
 # TODO
-# remove workspaces
+# check if the workspace already exists before adding it
 # integrate ctrl-z style directory learning
 # check if the current path is in the current workspace before executing commands
+# create a way to copy the jump directories and z directories from other workspaces
 # 
 
 # variables allow different locations for the data to be configured
 workspace_files=~/.workspaces
-workspace_conf=${workspace_files}/workspace_conf # stores all the workspaces
 workspace_data=.workspace_data    # directory created in workspace's root to link to it's data
 
 mkdir -p ${workspace_files}
@@ -37,6 +35,7 @@ mkdir -p ${workspace_files}
 # set when a workspace is switched to
 current_workspace=
 current_workspace_name=
+current_workspace_data=${workspace_files}/${current_workspace_name}
 
 # functions to retrieve specific workspace info these are internal commands
 #new_workspace_path=$(grep "^\([[:alnum:]_/-]\+ \+\)\+${new_workspace_name}$" ${workspace_files}/remembered_workspaces | cut -d" " -f1)
@@ -48,7 +47,7 @@ function _get_workspace_names() {
     else
         filter=$1
     fi
-    names=($(awk '{ print $2 }' < ${workspace_files}/remembered_workspaces))
+    names="$(awk '{ print $2 }' < ${workspace_files}/remembered_workspaces)"
     echo ${names}
 }
 
@@ -60,7 +59,7 @@ function _get_workspace_hosts() {
     else
         filter=$1
     fi
-    hosts=($(awk '{ print $1 }' < ${workspace_files}/remembered_hosts))
+    hosts="$(awk '{ print $1 }' < ${workspace_files}/remembered_hosts)"
     echo ${hosts}
 }
 
@@ -72,15 +71,24 @@ function _get_workspace_directories() {
     else
         filter=$1
     fi
-    directories=($(awk '{ print $1 }' < ${workspace_files}/remembered_workspaces))
+    directories="$(awk '{ print $1 }' < ${workspace_files}/remembered_workspaces)"
     echo ${directories}
+}
+
+function confirm() {
+    local answer
+    read -r -p "${1:-Are you sure?} [y/N] " answer
+    case ${answer} in
+        [yY][eE][sS]|[yY]) true;;
+        *) false;;
+    esac
 }
 
 
 function add_workspace() {
     local workspace_path workspace_host workspace_name
-    workspace_path=${PWD}
     workspace_host=${HOSTNAME}
+    workspace_path=${PWD}
     if [ -z "$1" ]; then
         workspace_name=${PWD##*/}
     else
@@ -88,7 +96,7 @@ function add_workspace() {
     fi
 
     # TODO: make sure this workspace name doesn't already exist
-    if [ -d "${workspace_name}" ]; then
+    if [ -d "${workspace_files}/${workspace_name}" ]; then
         echo "Workspace ${workspace_name} appears to exist. Come up with a new name."
         return
     else 
@@ -102,8 +110,6 @@ function add_workspace() {
     echo "${workspace_name} (root|${workspace_path}) " >> ${workspace_files}/remembered_files
     echo "${workspace_path} ${workspace_name}" >> ${workspace_files}/remembered_workspaces
     echo "${workspace_host} ${workspace_name}" >> ${workspace_files}/remembered_hosts
-
-    echo "${workspace_name} ${workspace_path} ${workspace_host}" >> ${workspace_conf}
 
 }
 
@@ -120,8 +126,8 @@ function switch_workspace() {
 
     #shift
 
-    new_workspace_path=$(grep "^\([[:alnum:]_/-]\+ \+\)\+${new_workspace_name}$" ${workspace_files}/remembered_workspaces | cut -d" " -f1)
-    new_workspace_hosts=$(grep "^\([[:alnum:]_/-]\+ \+\)\+${new_workspace_name}$" ${workspace_files}/remembered_hosts | cut -d" " -f1)
+    new_workspace_path=$(grep "^\([[:alnum:]_/-]\+ \+\)\+${new_workspace_name}\$" ${workspace_files}/remembered_workspaces | cut -d" " -f1)
+    new_workspace_hosts=$(grep "^\([[:alnum:]_/-]\+ \+\)\+${new_workspace_name}\$" ${workspace_files}/remembered_hosts | cut -d" " -f1)
 
     if [ -n "${new_workspace_path}" ] && [ -n "${new_workspace_hosts}" ]; then
         if [ "$HOSTNAME" != ${new_workspace_hosts} ]; then 
@@ -130,15 +136,13 @@ function switch_workspace() {
             current_workspace=${new_workspace_path}
             current_workspace_name=${new_workspace_name}
             cd ${current_workspace}
-            cscope_source
 
+            [[ -e "$(which cscope_source 2>/dev/null)" ]] && cscope_source
             #if cscope_source did not find a cscope file we should create one
             #generate syntastic files as well
 
-            printf "\033k${new_workspace_name}\033\\"
-            #if ! { [ "$TERM" = "screen" ] && [ -n "$TMUX" ]; } then
-            #    tmux rename-window "$1"
-            #fi
+            #change the terminal's title
+            printf "\033k${new_workspace_name}\033\\" &> /dev/null
         fi
         if [ -n "${2}" ]; then
             jump ${2}
@@ -165,21 +169,18 @@ complete -F _switch_workspace switch_workspace
 complete -F _switch_workspace ws
 
 function remove_workspace() {
-    echo "remove_workspace is not yet supported."
-    echo "If you want it email me."
-    echo "If you really want it make it yourself then email me."
-    return
     local remove_workspace_name
+    confirm 'Are you sure?' || return;
     if [ -n "$1" ]; then
         remove_workspace_name=${1##*/}
     else
         remove_workspace_name=${current_workspace_name##*/}
     fi
 
-    rm --preserve-root -recursive ${workspace_files}/${remove_workspace_name}
-
-    awk name=${remove_workspace_name} '/^name/ { print $1," ",$2," ",$3 }' < workspaces.conf
-
+    rm --preserve-root --recursive ${workspace_files}/${remove_workspace_name} 2> /dev/null
+    sed -i "/^\([[:alnum:]_/-]\+ \+\)\+${remove_workspace_name}/d" ${workspace_files}/remembered_workspaces
+    sed -i "/^\([[:alnum:]_/-]\+ \+\)\+${remove_workspace_name}/d" ${workspace_files}/remembered_hosts
+    sed -i "/^${remove_workspace_name} .*/d" ${workspace_files}/remembered_files
 }
 
 # add tab completion
@@ -191,9 +192,9 @@ complete -F _remove_workspace remove_workspace
 
 function list_workspaces() {
     local names directories hosts
-    names=$(_get_workspace_names)
-    directories=$(_get_workspace_directories)
-    hosts=$(_get_workspace_hosts)
+    names=($(_get_workspace_names))
+    directories=($(_get_workspace_directories))
+    hosts=($(_get_workspace_hosts))
 
     {
     echo "Name Host Directory"
@@ -201,14 +202,13 @@ function list_workspaces() {
     for ((i=0; i<${#names[@]}; i++ )); do
         echo "${names[$i]} ${hosts[$i]} ${directories[$i]}"
     done 
-    } | column -t
+    } | column --table
 
 }
 
 function clear_workspaces() {
-    echo "Are you sure?"
-    echo "Not implemented returning"
-    return
+    confirm 'Are you sure?' || return;
+    confirm 'Are you really sure?' || return;
     rm ${workspace_files}/remembered_*
     rm --preserve-root -recursive ${workspace_files}/${remove_workspace_name}
 }
@@ -295,9 +295,11 @@ _jump() {
 complete -F _jump jump
 
 function forget() {
-    echo "Not currently supported."
-    return
-    perl -i -pe "s#`pwd`##" ${workspace_files}/remembered_files
+    local remove_memory
+    [[ -z "${current_workspace_name}" ]] && return;
+    remove_memory_name=$1
+    sed -i "/^${remove_memory_name} .*/d" ${workspace_files}/${current_workspace_name}/remembered_files
+    #it needs to be removed from the ${workspace_files}/remembered_files as well
 }
 
 function list_memories() {
@@ -308,9 +310,10 @@ function list_memories() {
 
     {
     echo "Name Directory"
+    echo "---- ---------"
     for ((i=0; i<${#names[@]}; i++ )); do
         echo ${names[$i]} ${directories[$i]}
     done 
-    } | column -t
+    } | column --table
 }
 

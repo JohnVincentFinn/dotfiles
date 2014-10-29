@@ -1,0 +1,4 @@
+
+let g:syntastic_cpp_config_file = ".syntastic_cpp_config"
+let g:syntastic_cpp_no_default_include_dirs = 1             " usually these headers won't be used for compiling
+

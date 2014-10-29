@@ -1,3 +1,8 @@
 
+"CCTreeTraceReverse <symbolname>
+"CCTreeTraceForward <symbolname>
+"CCTreeRecurseDepthPlus   
+"CCTreeRecurseDepthMinus  
+
 autocmd VimEnter * if filereadable("${CSCOPE_DB}") | CCTreeLoadDB ${CSCOPE_DB} | endif
 
