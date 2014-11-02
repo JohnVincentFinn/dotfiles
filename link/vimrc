@@ -3,6 +3,12 @@
 
 source ~/.vim/bundles.vim
 
+" set some things up for powerline
+python from powerline.vim import setup as powerline_setup
+python powerline_setup()
+python del powerline_setup
+set rtp+=/usr/lib/python2.7/site-packages/powerline/bindings/vim
+
 set number                    " Shows the line number on the left
 set autoindent                " When you hit enter automatically be indented the correct amount
 set expandtab                 " uses spaces instead of tabs (watch out for makefiles they require tabs instead of spaces)
@@ -10,11 +16,11 @@ set shiftwidth=4              " This controls the indenting when you use >> or <
 set softtabstop=4             " This doesnt really matter with expandtab on but w/e
 set tabstop=4                 " use 4 spaces to tab
 set showmatch                 " highlight matching parens or braces
-set history=100
+set history=100               " lots of history is good
 set hlsearch                  " when you search highlight what you just searched for
 set visualbell                " Dont make an annoying ping when you do something wrong
-set encoding=utf-8
-set fileencoding=utf-8
+set encoding=utf-8            " without utf-8 some characters can't be displayed
+set fileencoding=utf-8        " without utf-8 some characters can't be displayed
 color darkblue                " the torte scheme is personal preference but there are lots of good color schemes
 syntax on                     " Syntax highlighting is useful
 
@@ -44,7 +50,7 @@ endfunction
 noremap Q @q
 
 " powerline settings
-"let g:Powerline_symbols = "fancy"
+set laststatus=2
 
 " mappings
 nnoremap <silent> <F8> :TlistToggle<CR>

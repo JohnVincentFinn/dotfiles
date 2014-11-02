@@ -33,6 +33,11 @@ alias ....='cd ../../..'
 alias .....='cd ../../../..'
 alias -- -='cd -'
 
+alias list_colors="(x=`tput op` y=`printf %76s`;for i in {0..256};do o=00$i;echo -e ${o:${#o}-3:3} `tput setaf $i;tput setab $i`${y// /=}$x;done)"
+#alias list_escape_codes='( strace -s5000 -e write tput op 2>&2 2>&1 ) | tee -a /dev/stderr | grep -o '"[^"]*"''
+
+
+
 # prevent a mistake I constantly make aka "cd cd directory"
 # function cd() {
 #     local folder_name

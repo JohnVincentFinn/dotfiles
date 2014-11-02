@@ -1,5 +1,7 @@
 # Modified from a prompt written by Ben Alman
 
+return;
+echo "using custom prompt"
 # default shell prompt incase everything fails
 export PS1="\[\e[1;34m\][\A]\[\e[0m\] \h \w$ "
 
