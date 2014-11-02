@@ -24,6 +24,9 @@ Plugin 'tpope/vim-fugitive'
 "" perforce integration
 "Plugin 'perforce'
 
+"" tmux integration
+Bundle 'christoomey/vim-tmux-navigator'
+
 "" static analysis
 Plugin 'scrooloose/syntastic'
 source ~/.vim/vim.d/syntastic
