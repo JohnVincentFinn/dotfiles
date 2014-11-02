@@ -1,0 +1,23 @@
+
+# set some color stuff
+xterm*termName: xterm-256color
+xterm*background: black
+xterm*foreground: white
+
+! fix the alt key
+xTerm*metaSendsEscape: true 
+
+xTerm*locale: true
+
+xterm*VT100.geometry:     80x25
+
+# this is needed for powerline
+xterm*faceName: Literation Mono Powerline
+xterm*faceSize: 10
+xterm*dynamicColors:      true
+xterm*utf8:               3
+xterm*eightBitInput:      true
+
+xterm*font: fixed
+xterm*boldFont: fixed
+
