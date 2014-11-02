@@ -57,3 +57,6 @@ Desktop.ini
 
 # NPM
 .npmignore
+
+# vim swap files
+.*.s[a-w][a-z]

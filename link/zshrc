@@ -84,24 +84,65 @@ autoload -U compinit promptinit
 compinit
 promptinit
 
-prompt suse
+# get some colors
+autoload -U colors && colors
+
+function prompt_clock() {
+    local clock_color
+    if [ ! -w "." ]; then
+        clock_color="red"
+    else
+        clock_color="blue"
+    fi
+    echo "$(date +"%%F{$clock_color}%H%%f:%%F{$clock_color}%M%%f")"
+}
+
+# Git status for zsh
+function prompt_git() {
+  local git_status output flags
+  git_status="$(git status 2>/dev/null)"
+  [[ $? != 0 ]] && return;
+  output="$(echo "$git_status" | awk '/# Initial commit/ {print "(init)"}')"
+  [[ "$output" ]] || output="$(echo "$git_status" | awk '/# On branch/ {print $4}')"
+  [[ "$output" ]] || output="$(git branch | perl -ne '/^\* (.*)/ && print $1')"
+  flags="$(
+    echo "$git_status" | awk 'BEGIN {r=""} \
+      /^Changes to be committed:$/        {r=r "+"}\
+      /^Changes not staged for commit:$/  {r=r "!"}\
+      /^Untracked files:$/                {r=r "?"}\
+      END {print r}'
+  )"
+  if [[ "$flags" ]]; then
+    output="$output $flags"
+  fi
+  echo "%F{white}$output%f"
+}
+
+function git_prompt_info() {
+    echo "$(current_branch)"
+}
+
+# Example of what it looks like
+# [10:30] Hostname ~$
+PROMPT='%B[$(prompt_clock)] %(!.%F{red}.)%m%f %~$%b '
+RPROMPT='$(prompt_git)%B%F{red}%(!.ROOT.)%f%b'
 
 zstyle ':completion:*' menu select
 
 setopt HIST_IGNORE_DUPS
 
 
-[[ -n ${key[Backspace]} ]] && bindkey "${key[Backspace]}" backward-delete-char
-[[ -n ${key[Insert]}    ]] && bindkey "${key[Insert]}"    overwrite-mode
-[[ -n ${key[Home]}      ]] && bindkey "${key[Home]}"      beginning-of-line
-[[ -n ${key[PageUp]}    ]] && bindkey "${key[PageUp]}"    up-line-or-history
-[[ -n ${key[Delete]}    ]] && bindkey "${key[Delete]}"    delete-char
-[[ -n ${key[End]}       ]] && bindkey "${key[End]}"       end-of-line
-[[ -n ${key[PageDown]}  ]] && bindkey "${key[PageDown]}"  down-line-or-history
-[[ -n ${key[Up]}        ]] && bindkey "${key[Up]}"        up-line-or-search
-[[ -n ${key[Left]}      ]] && bindkey "${key[Left]}"      backward-char
-[[ -n ${key[Down]}      ]] && bindkey "${key[Down]}"      down-line-or-search
-[[ -n ${key[Right]}     ]] && bindkey "${key[Right]}"     forward-char
+#[[ -n ${key[Backspace]} ]] && bindkey "${key[Backspace]}" backward-delete-char
+#[[ -n ${key[Insert]}    ]] && bindkey "${key[Insert]}"    overwrite-mode
+#[[ -n ${key[Home]}      ]] && bindkey "${key[Home]}"      beginning-of-line
+#[[ -n ${key[PageUp]}    ]] && bindkey "${key[PageUp]}"    up-line-or-history
+#[[ -n ${key[Delete]}    ]] && bindkey "${key[Delete]}"    delete-char
+#[[ -n ${key[End]}       ]] && bindkey "${key[End]}"       end-of-line
+#[[ -n ${key[PageDown]}  ]] && bindkey "${key[PageDown]}"  down-line-or-history
+#[[ -n ${key[Up]}        ]] && bindkey "${key[Up]}"        up-line-or-search
+#[[ -n ${key[Left]}      ]] && bindkey "${key[Left]}"      backward-char
+#[[ -n ${key[Down]}      ]] && bindkey "${key[Down]}"      down-line-or-search
+#[[ -n ${key[Right]}     ]] && bindkey "${key[Right]}"     forward-char
 
 DIRSTACKFILE="$HOME/.cache/zsh/dirs"
 if [[ -f $DIRSTACKFILE ]] && [[ $#dirstack -eq 0 ]]; then

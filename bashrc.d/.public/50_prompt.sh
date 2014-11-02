@@ -1,8 +1,7 @@
 # Modified from a prompt written by Ben Alman
 
-# default_shell prompt
+# default shell prompt incase everything fails
 export PS1="\[\e[1;34m\][\A]\[\e[0m\] \h \w$ "
-export PS2="| "
 
 #if [[ ! "${prompt_colors[@]}" ]]; then
   prompt_colors=(
@@ -10,29 +9,46 @@ export PS2="| "
     "${BWhite}" # bracket color
     "${Red}"    # error color
     "${Red}"    # clock color
+    "${BWhite}" # terminator color
 
   )
 #fi
-  prompt_terminator="$"
-
-# special situations
-#if [[ "$SSH_TTY" ]]; then
-#    _connected_via_ssh
-#elif [[ "$USER" == "root" ]]; then
-#    _logged_in_as_root
-#fi
-#
-#function _check_writability() {
-#  if [ ! -w "." ]; then
-#    _in_read_only_directory
-#  else
-#    _in_writable_directory
-#  fi
-#}
-
+prompt_terminator="$"
 
 # Inside a prompt function, run this alias to setup local $c0-$c9 color vars.
 alias prompt_getcolors='prompt_colors[9]=; local i; for i in ${!prompt_colors[@]}; do local c$i="${prompt_colors[$i]}"; done'
+
+function _connected_via_ssh() {
+    terminator_color="${BGreen}"
+}
+
+function _logged_in_as_root() {
+    prompt_terminator="#"
+}
+
+function _in_read_only_directory() {
+    clock_color="${Red}"
+}
+
+function _in_writable_directory() {
+    clock_color="${Blue}"
+}
+
+# special situations
+if [[ "$SSH_TTY" ]]; then
+    _connected_via_ssh
+elif [[ "$USER" == "root" ]]; then
+    _logged_in_as_root
+fi
+
+function _check_writability() {
+  if [ ! -w "." ]; then
+    _in_read_only_directory
+  else
+    _in_writable_directory
+  fi
+}
+
 
 # Exit code of previous command.
 function prompt_exitcode() {
@@ -62,9 +78,9 @@ function prompt_git() {
   [[ "$output" ]] || output="$(git branch | perl -ne '/^\* (.*)/ && print $1')"
   flags="$(
     echo "$status" | awk 'BEGIN {r=""} \
-      /^# Changes to be committed:$/        {r=r "+"}\
-      /^# Changes not staged for commit:$/  {r=r "!"}\
-      /^# Untracked files:$/                {r=r "?"}\
+      /^Changes to be committed:$/        {r=r "+"}\
+      /^Changes not staged for commit:$/  {r=r "!"}\
+      /^Untracked files:$/                {r=r "?"}\
       END {print r}'
   )"
   if [[ "$flags" ]]; then
@@ -85,46 +101,67 @@ function prompt_svn() {
   fi
 }
 
-function basic_prompt() {
-    prompt_getcolors
-    PS1="$(prompt_clock) \h \w${prompt_terminator} "
+function prompt_perforce() {
+    echo ""
 }
 
+# before constructing a prompt this should be used
+function prompt_begin() {
+    PS1=""
+}
+
+function prompt_add() {
+    PS1="$PS1$1${Color_Off}"
+}
+
+# called as the last of the prompt construction commands
+function prompt_end() {
+    prompt_add "${prompt_terminator} $c0"
+}
+
+
+# creating the prompts
+
+# simple quick prompt
+function basic_prompt() {
+    prompt_getcolors
+
+    prompt_begin
+    prompt_add "$(prompt_clock) \h \w"
+    prompt_end
+}
+
+# prompt that shows repository details
 function complex_prompt() {
   prompt_getcolors
   local exit_code=$?
 
-  # Manually load z here, after $? is checked, to keep $? from being clobbered.
-  #[[ "$(type -t _z)" ]] && _z --add "$(pwd -P 2>/dev/null)" 2>/dev/null
-
-
-  PS1="\n"
-  repository_data=""
-  # svn: [repo:lastchanged]
-  #repository_data="${repository_data}$(prompt_svn)"
-  # git: [branch:flags]
-  #repository_data="${repository_data}$(prompt_git)"
-  # perforce: flags
-  repository_data="${repository_data}$(prompt_perforce)"
-
-  # path: [user@host:path]
+  # start of the prompt
+  prompt_begin
   # date: [HH:MM]
-  PS1="$PS1$(prompt_clock) "
-  PS1="$PS1${repository_data}"
-  PS1="$PS1$c1[$c0\u$c1@$c0\h$c1:$c0\w$c1]$c9 "
+  prompt_add "$(prompt_clock)"
+  # svn: [repo:lastchanged]
+  #prompt_add "$(prompt_svn)"
+  # git: [branch:flags]
+  prompt_add "$(prompt_git)"
+  # perforce: flags
+  prompt_add "$(prompt_perforce)"
+  # path: [user@host:path]
+  prompt_add "$c1[$c0\u$c1@$c0\h$c1:$c0\w$c1]"
 
   # exit code: 127
-  #PS1="$PS1$(prompt_exitcode "$exit_code")$c9"
+  #prompt_add "$(prompt_exitcode "$exit_code")"
 
   # end of the prompt
-  PS1="$PS1${prompt_terminator} $c0"
+  prompt_end
 }
 
+# choose which prompt to use
 # the default prompt command
 PROMPT_COMMAND=basic_prompt # this essentially overwrites PS1
 
 # switch between different prompts
-function switch_prompt() {
+function set_prompt() {
     if [ "$1" == "basic" ]; then
         PROMPT_COMMAND=basic_prompt;
     elif [ "$1" == "complex" ]; then

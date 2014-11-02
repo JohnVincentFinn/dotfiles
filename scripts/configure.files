@@ -30,11 +30,14 @@ function link_files() {
 
 }
 
+echo "Linking files in link into home directory
 link_files
 
+echo "Setup vim plugins using vundle"
 # reinstall vundle stuff
 vim +PluginInstall +qall
 
+echo "Linking wemux into scripts"
 ln -s scripts/.wemux/wemux scripts/wemux
 
 function install_git_repos() {
@@ -42,7 +45,9 @@ function install_git_repos() {
     return
     echo "-> installing wemux"
     git clone git://github.com/zolrath/wemux.git ~/.files/extensions/wemux
+    echo "-> installing vundle"
     git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+    echo "-> installing powerline"
     git clone https://github.com/Lokaltog/powerline.git
     cd powerline
     ln -s {powerline_path}/scripts/powerline ~/.local/bin
