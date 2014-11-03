@@ -21,16 +21,17 @@ set hlsearch                  " when you search highlight what you just searched
 set visualbell                " Dont make an annoying ping when you do something wrong
 set encoding=utf-8            " without utf-8 some characters can't be displayed
 set fileencoding=utf-8        " without utf-8 some characters can't be displayed
-color darkblue                " the torte scheme is personal preference but there are lots of good color schemes
 syntax on                     " Syntax highlighting is useful
-
+colorscheme torte             " torte is personal preference any colorscheme is good
 filetype plugin on
+
+" stuff to match lines that are too long
+
 "autocmd ColorScheme * highlight ColorColumn ctermbg=235 guibg=#2c2d27
 "highlight ColorColumn ctermbg=250 guibg=#2c2d27
 "let &colorcolumn=join(range(81,90),",")
 "match ErrorMsg '\%>91v.\+'
 "
-
 highlight OverLength ctermbg=red ctermfg=white guibg=#592929
 function OverLength()
     match OverLength /\%81v.\+/
@@ -53,11 +54,18 @@ noremap Q @q
 set laststatus=2
 
 " mappings
-nnoremap <silent> <F8> :TlistToggle<CR>
-nnoremap <silent> <F9> :NERDTreeToggle<CR>
 
 nmap <silent> <C-n> :tabnext<CR>
 nmap <silent> <C-p> :tabprev<CR>
 
+" these could go in vim.d but since they are one line
+" I left theme here
+nnoremap <silent> <F8> :TlistToggle<CR>
+nnoremap <silent> <F9> :NERDTreeToggle<CR>
 nnoremap <leader>. :CtrlPTag<cr>
+
+
+" I want all my color schemes to switch at the same time
+" so I just change a symbolic link and reload everything
+source ~/.files/current_theme/vim.theme 
 

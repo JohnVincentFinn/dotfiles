@@ -9,4 +9,8 @@ link_directory=~/.files/link
 scripts_directory=~/.files/scripts
 source_directory=~/.files/bashrc.d
 backup_directory=~/.files/backup
+install_directory=~/.files/install
+current_theme_directory=~/.files/current_theme
+theme_directory=~/.files/themes
+default_theme_directory=${theme_directory}/default
 

@@ -10,3 +10,9 @@
 [submodule "link/oh-my-zsh"]
 	path = link/oh-my-zsh
 	url = https://github.com/robbyrussell/oh-my-zsh.git
+[submodule "install/solarized"]
+	path = install/solarized
+	url = https://github.com/altercation/solarized.git
+[submodule "install/dircolors-solarized"]
+	path = install/dircolors-solarized
+	url = https://github.com/seebi/dircolors-solarized.git

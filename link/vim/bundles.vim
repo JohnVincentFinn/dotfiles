@@ -24,9 +24,6 @@ Plugin 'tpope/vim-fugitive'
 "" perforce integration
 "Plugin 'perforce'
 
-"" tmux integration
-Bundle 'christoomey/vim-tmux-navigator'
-
 "" static analysis
 Plugin 'scrooloose/syntastic'
 source ~/.vim/vim.d/syntastic
@@ -60,9 +57,17 @@ Plugin 'gcov.vim'
 
 " fast jumping around
 " Plugin 'Lokaltog/vim-easymotion'
+"
+"" tmux integration
+Plugin 'christoomey/vim-tmux-navigator'
 
-" lots of colorschemes
-Plugin 'flazz/vim-colorschemes'
+"" lots of colorschemes
+"Plugin 'flazz/vim-colorschemes'
+
+"" solarized
+Plugin 'altercation/vim-colors-solarized'
+
+
 
 call vundle#end()
 filetype plugin on

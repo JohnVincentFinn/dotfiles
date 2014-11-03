@@ -1,4 +1,6 @@
 
+echo "this doesn't work yet"
+return
 source ~/.files/global
 
 function link_files() {
@@ -17,7 +19,7 @@ function link_files() {
         if [ -a ~/.${file##*/} ]; then
             mv ~/.${file##*/} ${new_backup_directory}/${file##*/}
         fi
-		ln -s ${file} ~/.${file##*/}
+		ln --symbolic ${file} ~/.${file##*/}
 	done
 
     backedup_files=${new_backup_directory}/*
@@ -33,12 +35,9 @@ function link_files() {
 echo "Linking files in link into home directory
 link_files
 
-echo "Setup vim plugins using vundle"
+echo "Installing vundle plugins"
 # reinstall vundle stuff
 vim +PluginInstall +qall
-
-echo "Linking wemux into scripts"
-ln -s scripts/.wemux/wemux scripts/wemux
 
 function install_git_repos() {
     echo "not yet implemented"
@@ -50,15 +49,15 @@ function install_git_repos() {
     echo "-> installing powerline"
     git clone https://github.com/Lokaltog/powerline.git
     cd powerline
-    ln -s {powerline_path}/scripts/powerline ~/.local/bin
+    ln --symbolic {powerline_path}/scripts/powerline ~/.local/bin
     cd ..
 
     git clone https://github.com/kovidgoyal/powerline-daemon.git
     cd powerline-daemon
     gcc -O3 powerline-client.c -o powerline-client
     chmod +x powerline-daemon
-    ln -s powerline-daemon ~/.local/bin
-    ln -s powerline-client ~/.local/bin
+    ln --symbolic powerline-daemon ~/.local/bin
+    ln --symbolic powerline-client ~/.local/bin
     cd ..
 
     https://github.com/Lokaltog/powerline-fonts.git

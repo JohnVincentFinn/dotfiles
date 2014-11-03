@@ -1,0 +1,39 @@
+
+source ~/.files/global
+
+function create_theme() {
+    local theme_name
+    if [ ! -e "${default_theme_directory}" ]; then
+        echo "something has gone horribly wrong"
+        echo "you have no default theme"
+        return
+    fi
+    if [ -z $1 ]; then
+        echo "Specify a name"
+        return
+    fi
+    theme_name=${1}
+    if [ -e "${theme_name}" ]; then
+        echo "theme already exists"
+        return
+    fi
+
+    new_theme_directory="${theme_directory}/${theme_name}"
+    mkdir ${new_theme_directory}
+    if [ $? != "0" ]; then
+        echo "could not create theme directory at ${new_theme_directory}"
+        return
+    fi
+
+    theme_files=( "awesome.theme" "dircolors.theme" "tmux.theme" "vim.theme" "Xresources.theme" )
+
+    
+    for theme_file in ${theme_files}; do
+        if [ ! -e "${default_theme_directory}/${theme_file}" ]; then
+            echo "${theme_file} is missing"
+        fi
+        ln --symbolic ${default_theme_directory}/${theme_file} ${new_theme_directory}/${theme_file}
+    done
+}
+
+create_theme $@
