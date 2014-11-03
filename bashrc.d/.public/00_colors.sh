@@ -1,5 +1,6 @@
 # Thanks to the Arch Community for providing this
 # https://wiki.archlinux.org/index.php/Color_Bash_Prompt
+if_verbose echo "colors is being sourced"
 
 # This sets the colors to readable variable names
 

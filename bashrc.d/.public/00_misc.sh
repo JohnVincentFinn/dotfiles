@@ -32,3 +32,10 @@ function titlebar() {
   echo -n $'\e]0;'"$*"$'\a'
 }
 
+# put some common user specific directories in PATH
+export PATH=${PATH}:~/bin
+export PATH=${PATH}:~/.local/bin
+
+# some user specific stuff
+export EDITOR="vim"
+

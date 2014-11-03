@@ -26,6 +26,8 @@
 # create a way to copy the jump directories and z directories from other workspaces
 # 
 
+if_verbose echo "workspace is being sourced"
+
 # variables allow different locations for the data to be configured
 workspace_files=~/.workspaces
 workspace_data=.workspace_data    # directory created in workspace's root to link to it's data

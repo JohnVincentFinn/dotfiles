@@ -67,5 +67,5 @@ nnoremap <leader>. :CtrlPTag<cr>
 
 " I want all my color schemes to switch at the same time
 " so I just change a symbolic link and reload everything
-source ~/.files/current_theme/vim.theme 
+source ~/.files/themes/current_theme/vim.theme 
 

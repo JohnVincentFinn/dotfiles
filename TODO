@@ -1,10 +1,19 @@
 
 write syntastic include script to run when a new workspace is created
-allow jumping to recently used directories instead of just directories that were saved
 get coverity vim plugin
 
 get zsh plugins and settings working correctly
 get configure.files working correctly
 get installing programs working correctly
 put some of the files from .config like awesome in the git repository
+
+Add some themes
+Get zsh to use my bash plugins
+get bash to use the zsh plugins
+
+fix whatevers wrong with the wallpaper script in awesome
+
+include awesome settings
+
+add the z submodule back since you accidentally deleted it
 

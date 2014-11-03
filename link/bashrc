@@ -2,73 +2,26 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
-alias ls='ls --color=auto'
+# for easy debugging of any mistakes
+verbose_mode=
+alias if_verbose='[[ ! -z "${verbose_mode}" ]] &&'
+
 PS1='[\u@\h \W]\$ '
 
-export EDITOR="vim"
-export PATH=$PATH:~/bin
+# sets where important directories are located
+source ~/.files/global
 
-export PATH=${PATH}:~/.local/bin
+# add any plugins that are wanted here
+# some plugins may be required by others to work properly
+# this must be set before the plugins script is sourced
+# or call source plugins after setting it
+plugins_to_source=(workspace bash_completion powerline z themes)
 
 for i in `ls ~/.files/bashrc.d/`; do
     source ~/.files/bashrc.d/$i
 done
 
+# if the user has anything to add it should be done here
 source ~/.bashrc_USER
 
-
-
-source ~/.files/global
-
-# if the current theme isn't linked properly make it the default
-if [ ! -e "${current_theme_directory}" ]; then
-    if [ -e "${default_theme_directory}" ]; then
-        ln --symbolic ${default_theme_directory} ${current_theme_directory}
-    fi
-fi
-
-# set up some colours if a theme directory is found
-if [ -e "${current_theme_directory}" ]; then
-    eval $(dircolors ${current_theme_directory}/dircolors.theme)
-fi
-
-function switch_theme() {
-
-    # no argument could mean default but chances are it's a mistake
-    if [ -z "${1}" ]; then
-        echo "no theme was specified"
-        echo "to switch to the default theme use \"default\""
-    fi
-    theme_name=${1}
-
-    if [ ! -e "${theme_directory}/${theme_name}" ]; then
-        echo "no theme by that name exists"
-    fi
-
-    # make sure we actually have a place to put it
-    if [ -z "${current_theme_directory}" ]; then
-        echo "~/.files/global must have been screwed up"
-        echo "\${current_theme_directory} isn't set"
-        return
-    fi
-    if [ -e "${current_theme_directory}" ]; then
-        rm ${current_theme_directory}
-    fi
-    ln --symbolic ${theme_directory}/${theme_name} ${current_theme_directory}
-
-    # now re-source everything
-    eval $(dircolors ${current_theme_directory}/dircolors.theme)
-    tmux source-file ${current_theme_directory}/tmux.theme > /dev/null
-
-    # vim doesn't need to be resourced just reopen it
-
-    #these ones will have to wait
-    xrdb -merge ${current_theme_directory}/Xresources.theme
-    #echo 'awesome.restart()' | awesome-client
-}
-
-# write tab completion for switch_theme it should be pretty easy
-function _switch_theme() {
-    echo "not implemented"
-}
 

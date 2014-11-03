@@ -1,4 +1,5 @@
 # adds certain bash completion stuff
+if_verbose echo "bash_completion is being sourced"
 
 
 

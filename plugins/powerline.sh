@@ -1,5 +1,7 @@
 
+if_verbose echo "powerline is being sourced"
 if [ ! -f /usr/lib/python2.7/site-packages/powerline/bindings/bash/powerline.sh ]; then
+    if_verbose echo "powerline could not be sourced missing binding"
     return
 fi
 POWERLINE_CONFIG_COMMAND=/usr/bin/powerline-config

@@ -1,4 +1,5 @@
 # Modified from a prompt written by Ben Alman
+if_verbose echo "prompt is being sourced"
 
 return;
 echo "using custom prompt"
