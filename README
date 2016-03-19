@@ -63,3 +63,21 @@ scripts
 -------
 contains configure.files which should be run on new syncs (when it's done)
 This directory should be pointed to by path
+
+themes
+------
+This is meant to simplify synchronizing the themes of many different programs
+symbolic links are used to link the the correct file to use as a theme
+the themes/current_theme is symbolically linked to the current theme then inside
+the current_theme directory there are *.theme links to the actual theme to use
+
+the themes/.resources folder is used to store a bunch of resources that can be used
+to construct the themes
+
+all the layers of symbolic links can make things confusing though like for example conky is probably the worst
+.conkyrc -> ~/.files/link/conkyrc -> ~/.files/themes/current_theme/conky.theme -> ~/.files/themes/solarized_dark/conky.theme -> ~/.files/themes/.resources/conky/conky_simple
+
+somehow things are simpler anyway as long as you know whats going on. things could be made simpler by copying say the conky_simple file into the solarized_dark/conky.theme but I'd prefer to use git submodules for several of the resources so I can't just check the conky_simple file in with a different_name in a different place without a symlink
+
+hidden files are also everywhere to keep clutter to a minimum. If it's unlikely something will ever be edited or a directory will ever actually need to be browsed then it is a hidden file. This hopefully will keep the settings and the stuff needed to make everything work seperate
+

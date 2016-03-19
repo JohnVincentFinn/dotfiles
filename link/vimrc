@@ -21,17 +21,18 @@ set hlsearch                  " when you search highlight what you just searched
 set visualbell                " Dont make an annoying ping when you do something wrong
 set encoding=utf-8            " without utf-8 some characters can't be displayed
 set fileencoding=utf-8        " without utf-8 some characters can't be displayed
+set cursorline                " highlight the current line
 syntax on                     " Syntax highlighting is useful
 colorscheme torte             " torte is personal preference any colorscheme is good
 filetype plugin on
 
 " stuff to match lines that are too long
 
-"autocmd ColorScheme * highlight ColorColumn ctermbg=235 guibg=#2c2d27
-"highlight ColorColumn ctermbg=250 guibg=#2c2d27
-"let &colorcolumn=join(range(81,90),",")
-"match ErrorMsg '\%>91v.\+'
-"
+autocmd ColorScheme * highlight ColorColumn ctermbg=236 guibg=#2c2d27
+highlight ColorColumn ctermbg=250 guibg=#2c2d27
+let &colorcolumn=join(range(81,120),",")
+match WarningMsg '\%>80v.\+'
+
 highlight OverLength ctermbg=red ctermfg=white guibg=#592929
 function OverLength()
     match OverLength /\%81v.\+/
@@ -42,8 +43,21 @@ endfunction
 
 highlight FindColor ctermbg=red guibg=#592929
 function Colorfind()
-    match FindColor  /\(\%#.*\)\@<=f/
+    "match FindColor  /\(\%#.*\)\@<=f/+2
 endfunction
+
+" if vim is compiled with client-server use that otherwise use a loop
+" use --remote-expr {expr} to send a message that will tell vim to update it's
+" information
+"highlight SomeLine ctermbg=red ctermfg=white
+"hi default BookmarkCol ctermfg=blue ctermbg=lightblue cterm=bold guifg=DarkBlue guibg=#d0d0ff gui=bold
+"execute 'echom ' . system('~/test.sh')
+""execute 'match SomeLine /\%' . system('~/test.sh') . 'l.\+/'
+"sign define piet text=>> texthl=BookmarkCol
+"" sign jump {id} file={filename} can be used to jump to a new window
+"execute "sign place 2 line=" . system("~/test.sh") . " name=piet file=" . expand("%:p")
+""execute 'match SomeLine /.\%' . '4' . 'l.\+/'
+
 
 " qq - record macro
 " q  - stop recording macro
@@ -54,9 +68,11 @@ noremap Q @q
 set laststatus=2
 
 " mappings
+imap jk <Esc>
 
 nmap <silent> <C-n> :tabnext<CR>
 nmap <silent> <C-p> :tabprev<CR>
+
 
 " these could go in vim.d but since they are one line
 " I left theme here
@@ -64,8 +80,20 @@ nnoremap <silent> <F8> :TlistToggle<CR>
 nnoremap <silent> <F9> :NERDTreeToggle<CR>
 nnoremap <leader>. :CtrlPTag<cr>
 
+nmap <silent> <F3> :getpos(.)w! ~/.vclip<CR>
+nmap <silent> <F3> :'<,'>w! ~/.vclip<CR>
+nmap <silent> <F4> :r ~/.vclip<CR>
 
 " I want all my color schemes to switch at the same time
 " so I just change a symbolic link and reload everything
-source ~/.files/themes/current_theme/vim.theme 
+"source ~/.files/themes/current_theme/vim.theme 
+
+let g:solarized_termcolors=256
+"let g:solarized_termtrans        " if the terminal is transparent this should be set to 1
+"let g:solarized_contrast         " setting to high or low shifts the color contrast
+let g:solarized_visibility="low" " can be set to either low, normal or high. when used with :set list this will
+"set list                         " show trailing end of line characters
+set background=dark              " alternatively can be set to light for a light colored terminal
+colorscheme solarized            " solarized is NOT personal preference it is scientifically the best colorscheme
+
 

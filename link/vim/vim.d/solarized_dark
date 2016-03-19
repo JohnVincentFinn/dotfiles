@@ -1,9 +1,9 @@
 
 let g:solarized_termcolors=256
-"let g:solarized_termtrans       " if the terminal is transparent this should be set to 1
-"let g:solarized_contrast        " setting to high or low shifts the color contrast
+"let g:solarized_termtrans        " if the terminal is transparent this should be set to 1
+"let g:solarized_contrast         " setting to high or low shifts the color contrast
 let g:solarized_visibility="low" " can be set to either low, normal or high. when used with :set list this will
-set list                         " show trailing end of line characters
+"set list                         " show trailing end of line characters
 set background=dark              " alternatively can be set to light for a light colored terminal
 colorscheme solarized            " solarized is NOT personal preference it is scientifically the best colorscheme
 

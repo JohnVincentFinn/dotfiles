@@ -2,26 +2,23 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
-# for easy debugging of any mistakes
-verbose_mode=
-alias if_verbose='[[ ! -z "${verbose_mode}" ]] &&'
+source ~/.files/bash_files
 
+# a default prompt
 PS1='[\u@\h \W]\$ '
 
-# sets where important directories are located
-source ~/.files/global
+# if there is a seperate plugin directory that should be used set it here
+plugin_directories=(${default_plugin_directories})
 
 # add any plugins that are wanted here
 # some plugins may be required by others to work properly
 # this must be set before the plugins script is sourced
 # or call source plugins after setting it
-plugins_to_source=(workspace bash_completion powerline z themes)
+plugins_to_source=( aliases bd extract workspace bash_completion powerline z )
 
-for i in `ls ~/.files/bashrc.d/`; do
-    source ~/.files/bashrc.d/$i
-done
+load_bash_files
 
 # if the user has anything to add it should be done here
 source ~/.bashrc_USER
 
-
+eval $(dircolors ~/.dircolors)

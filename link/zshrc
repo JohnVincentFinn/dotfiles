@@ -2,7 +2,7 @@
 export ZSH=$HOME/.oh-my-zsh
 
 # contains information about where important directories are located
-source ~/.files/global
+#source ~/.files/global
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
@@ -83,6 +83,9 @@ promptinit
 # get some colors
 autoload -U colors && colors
 
+# get zmv
+autoload -U zmv
+
 function prompt_clock() {
     local clock_color
     if [ ! -w "." ]; then
@@ -158,37 +161,10 @@ setopt pushdignoredups
 
 ## This reverts the +/- operators.
 setopt pushdminus
-if [ -f /usr/lib/python2.7/site-packages/powerline/bindings/zsh/powerline.zsh ]; then
-    source /usr/lib/python2.7/site-packages/powerline/bindings/zsh/powerline.zsh
-fi
+#if [ -f /usr/lib/python2.7/site-packages/powerline/bindings/zsh/powerline.zsh ]; then
+#    source /usr/lib/python2.7/site-packages/powerline/bindings/zsh/powerline.zsh
+#fi
 
+export EDITOR=vim
 
-source ~/.files/global
-# set up some colours
-eval $(dircolors ${current_theme_directory}/dircolors.theme)
-
-function switch_theme() {
-    if [ -z "${1}" ]; then
-        echo "no theme was specified"
-        echo "to switch to the default theme use \"default\""
-    fi
-    theme_name=${1}
-
-    if [ ! -e "${theme_directory}/${theme_name}" ]; then
-        echo "no theme by that name exists"
-    fi
-
-    rm ${current_theme_directory}
-    ln --symbolic ${theme_directory}/${theme_name} ${current_theme_directory}
-
-    # now re-source everything
-    eval $(dircolors ${current_theme_directory}/dircolors.theme)
-    tmux source-file ${current_theme_directory}/tmux.theme > /dev/null
-
-    # vim doesn't need to be resourced just reopen it
-
-    #these ones will have to wait
-    xrdb -merge ${current_theme_directory}/Xresources.theme
-    #echo 'awesome.restart()' | awesome-client
-}
 

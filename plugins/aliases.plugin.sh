@@ -1,5 +1,4 @@
 # miscellanious aliases I like
-if_verbose echo "aliases are being sourced"
 
 # my aliases
 alias h=history
@@ -126,94 +125,6 @@ function cscope_generate() {
     fi
 }
 
-
-# go backwards to a directory
-function bd() {
-    if [ -z "$1" ]; then
-        cd ..
-        return
-    else
-        file_name="$1"
-    fi
-
-    prev_prev_dir=${OLDPWD}
-    prev_dir=${PWD}
-    while :; do
-        if [ -e "${file_name}" ]; then
-            cd ${file_name}
-            OLDPWD=${prev_dir}
-            return
-        fi 
-
-        if [ / == "${PWD}" ]; then
-            break;
-        else
-            cd ..
-        fi
-    done
-
-    cd ${prev_dir}
-    OLDPWD=${prev_prev_dir}
-
-}
-
-# add tab completion
-# Currently folder names with spaces and tab completing multiple levels are broken
-_bd() {
-    COMPREPLY=( $(compgen -d "${COMP_WORDS[COMP_CWORD]}") )
-
-    prev_prev_dir=${OLDPWD}
-    prev_dir=${PWD}
-    while :; do
-        COMPREPLY+=( $(compgen -d "${COMP_WORDS[COMP_CWORD]}") )
-        if [ / == "${PWD}" ]; then
-            break;
-        else
-            cd ..
-        fi
-    done
-
-    cd ${prev_dir}
-    OLDPWD=${prev_prev_dir}
-}
-
-complete -o nospace -F _bd -S / bd
-
 shopt -s extglob
 
-
-#extract() {
-#    local c e i
-#
-#    (($#)) || return
-#
-#    for i; do
-#        c=''
-#        e=1
-#
-#        if [[ ! -r $i ]]; then
-#            echo "$0: file is unreadable: \`$i'" >&2
-#            continue
-#        fi
-#
-#        case $i in
-#            *.t@(gz|lz|xz|b@(2|z?(2))|a@(z|r?(.@(Z|bz?(2)|gz|lzma|xz)))))
-#            c=(bsdtar xvf);;
-#            *.7z)  c=(7z x);;
-#            *.Z)   c=(uncompress);;
-#            *.bz2) c=(bunzip2);;
-#            *.exe) c=(cabextract);;
-#            *.gz)  c=(gunzip);;
-#            *.rar) c=(unrar x);;
-#            *.xz)  c=(unxz);;
-#            *.zip) c=(unzip);;
-#            *)     echo "$0: unrecognized file extension: \`$i'" >&2
-#            continue;;
-#        esac
-#
-#        command "${c[@]}" "$i"
-#        ((e = e || $?))
-#    done
-#    return "$e"
-#}
 

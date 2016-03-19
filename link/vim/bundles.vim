@@ -47,6 +47,8 @@ Plugin 'itchyny/calendar.vim'
 
 " Outliner
 Plugin 'VOoM'
+Plugin 'vimoutliner'
+Plugin 'vimwiki'
 
 "gcov file highlighting
 Plugin 'gcov.vim'

@@ -26,8 +26,6 @@
 # create a way to copy the jump directories and z directories from other workspaces
 # 
 
-if_verbose echo "workspace is being sourced"
-
 # variables allow different locations for the data to be configured
 workspace_files=~/.workspaces
 workspace_data=.workspace_data    # directory created in workspace's root to link to it's data
@@ -146,6 +144,7 @@ function switch_workspace() {
             #change the terminal's title
             printf "\033k${new_workspace_name}\033\\" &> /dev/null
         fi
+
         if [ -n "${2}" ]; then
             jump ${2}
         fi
@@ -273,7 +272,7 @@ function jump() {
     if [ -n "${current_workspace_name}" ]; then
         remembered_file=$(egrep "^${jump_name} " ${workspace_files}/${current_workspace_name}/remembered_files | awk '{ print $2 }' )
         if [ -n "${remembered_file}" ]; then
-            echo "Jumping to ${remembered_file}"
+            if_verbose echo "Jumping to ${remembered_file}"
             cd ${remembered_file}
         else
 cat << EOF
@@ -319,3 +318,11 @@ function list_memories() {
     } | column --table
 }
 
+
+_Z_CMD=wsz
+_Z_DATA=${current_workspace_data}/wsz
+#_Z_NO_RESOLVE_SYMLINKS=
+#_Z_NO_PROMPT_COMMAND=
+#_Z_EXCLUDE_DIRS
+#_Z_OWNER
+source ~/.files/plugins/wsz/z.sh

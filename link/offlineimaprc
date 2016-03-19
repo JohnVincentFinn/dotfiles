@@ -1,0 +1,41 @@
+[general]
+ui = TTY.TTYUI
+accounts = johnfinn
+pythonfile = ~/.mutt/offlineimap.py
+fsync = False
+
+[Account johnfinn]
+localrepository = johnfinn-Local
+remoterepository = johnfinn-Remote
+status_backend = sqlite
+postsynchook = notmuch new
+
+[Repository johnfinn-Local]
+type = Maildir
+localfolders = ~/.mail/johnfinn
+nametrans = lamda: {
+    'drafts':  '[Gmail]/Drafts',
+	'sent':    '[Gmail]/Sent Mail',
+	'flagged': '[Gmail]/Starred',
+	'trash':   '[Gmail]/Trash',
+	'archive': '[Gmail]/All Mail',
+    }.get(folder, folder)
+
+[Repository johnfinn-Remote]
+maxconnections = 1
+type = Gmail
+remoteuser = johnfinn@gmail.com
+remotepass =
+realdelete = no
+nametrans = lambda folder: {
+    '[Gmail]/Drafts':    'drafts',
+	'[Gmail]/Sent Mail': 'sent',
+	'[Gmail]/Starred':   'flagged',
+	'[Gmail]/Trash':     'trash',
+	'[Gmail]/All Mail':  'archive',
+    }.get(folder, folder)
+
+folderfilter = lambda folder: folder not in [
+    '[Gmail]/Trash',
+    '[Gmail]/Spam',
+    ]

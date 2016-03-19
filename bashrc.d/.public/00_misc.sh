@@ -21,9 +21,6 @@ shopt -s cdspell
 # attempt to perform hostname completion
 shopt -s hostcomplete
 
-export GREP_OPTIONS='--color=auto'
-#export GREP_COLORS
-
 # Prevent less from clearing the screen while still showing colors.
 export LESS=-XR
 

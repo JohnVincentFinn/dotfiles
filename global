@@ -5,48 +5,45 @@
 # it sets the paths of the other directories so it cant
 # actually be located in them.
 
+# directory where unabashed lives
+export unabashed=~/.files/unabashed
+
+dot_files=~/.files
+
 # these files are symbolically linked into the
 # users home directories with a . prependeding them
-link_directory=~/.files/link
+link_directory=${dot_files}/link
 
 # this should be put in the users path
-scripts_directory=~/.files/scripts
+scripts_directory=${dot_files}/scripts
+
+# when .files is updated and the .files in ~
+# are relinked any previous files will be backed
+# up to this directory in case something 
+# important was in them
+backup_directory=${dot_files}/backup
+install_directory=${dot_files}/install
 
 # I don't like big long files I prefer several files
 # that each provide some chunk of functionality so I can swap
 # them in and out without having to remember much
 # these are more "settings" then "plugins" if that makes
 # sense
-source_directory=~/.files/bashrc.d
+source_directory=${dot_files}/bashrc.d
 
 # these directories load plugins for bash
 # the plugin 100_plugins.sh in ${source_directory} will
 # add plugins from this directory
-plugin_directories=(~/.files/plugins)
+default_plugin_directories="${dot_files}/plugins"
+plugin_directories=(${default_plugin_directories})
 
-
-# when .files is updated and the .files in ~
-# are relinked any previous files will be backed
-# up to this directory in case something 
-# important was in them
-backup_directory=~/.files/backup
-install_directory=~/.files/install
-
-# directories related to themes
-# I have a lot of programs all pointing to different themes
-# I've set it up so that I can change all the themes all at the
-# same time by changing where the current_theme_directory symlink points
-# the current_theme_directory name itself should be be changed just
-# the where it links to
-theme_directory=~/.files/themes
-current_theme_directory=${theme_directory}/current_theme
-default_theme_directory=${theme_directory}/default
-
+# for easier debugging
 function _print_global_directories() {
-    directory_variables=(link scripts source plugin backup install theme current_theme default_theme)
+    directory_variables=(link scripts backup install theme current_theme default_theme)
+    echo "global directories:"
     for var in ${directory_variables[@]}; do
         directory_variable=${var}_directory
-        echo "${directory_variable}=${!directory_variable}"
+        echo "  ${directory_variable}=${!directory_variable}"
     done
 }
 
