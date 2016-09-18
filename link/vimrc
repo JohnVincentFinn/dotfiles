@@ -25,6 +25,7 @@ set cursorline                " highlight the current line
 syntax on                     " Syntax highlighting is useful
 colorscheme torte             " torte is personal preference any colorscheme is good
 filetype plugin on
+set cm=blowfish2              " Secure encryption is good
 
 " stuff to match lines that are too long
 

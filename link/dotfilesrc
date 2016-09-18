@@ -1,0 +1,29 @@
+
+# global variables
+
+# this should be located in either ~/.files
+# it sets the paths of the other directories so it cant
+# actually be located in them.
+
+dot_files=~/.files
+
+# these files are symbolically linked into the
+# users home directories with a . prependeding them
+rc_directory=${dot_files}/rc
+
+# this should be put in the users path
+scripts_directory=${dot_files}/scripts
+
+# when .files is updated and the .files in ~
+# are relinked any previous files will be backed
+# up to this directory in case something 
+# important was in them
+backup_directory=${dot_files}/backup
+install_directory=${dot_files}/install
+
+# I don't like big long files I prefer several files
+# that each provide some chunk of functionality so I can swap
+# them in and out without having to remember much
+# these are more "settings" then "plugins"
+source_directory=~/bashrc.d
+
