@@ -3,12 +3,6 @@
 
 source ~/.vim/bundles.vim
 
-" set some things up for powerline
-python from powerline.vim import setup as powerline_setup
-python powerline_setup()
-python del powerline_setup
-set rtp+=/usr/lib/python2.7/site-packages/powerline/bindings/vim
-
 set number                    " Shows the line number on the left
 set autoindent                " When you hit enter automatically be indented the correct amount
 set expandtab                 " uses spaces instead of tabs (watch out for makefiles they require tabs instead of spaces)
@@ -97,4 +91,7 @@ let g:solarized_visibility="low" " can be set to either low, normal or high. whe
 set background=dark              " alternatively can be set to light for a light colored terminal
 colorscheme solarized            " solarized is NOT personal preference it is scientifically the best colorscheme
 
-
+source ~/.vim/vim.d/solarized_dark
+"for path in split(globpath('~/.vim/vim.d/', '*.vim'), '\n')
+"  exe 'source' fpath
+"endfor
