@@ -23,23 +23,23 @@ set cm=blowfish2              " Secure encryption is good
 
 " stuff to match lines that are too long
 
-autocmd ColorScheme * highlight ColorColumn ctermbg=236 guibg=#2c2d27
-highlight ColorColumn ctermbg=250 guibg=#2c2d27
-let &colorcolumn=join(range(81,120),",")
-match WarningMsg '\%>80v.\+'
-
-highlight OverLength ctermbg=red ctermfg=white guibg=#592929
-function OverLength()
-    match OverLength /\%81v.\+/
-endfunction
-function OverLength72()
-    match OverLength /\%73v.\+/
-endfunction
-
-highlight FindColor ctermbg=red guibg=#592929
-function Colorfind()
-    "match FindColor  /\(\%#.*\)\@<=f/+2
-endfunction
+" autocmd ColorScheme * highlight ColorColumn ctermbg=236 guibg=#2c2d27
+" highlight ColorColumn ctermbg=250 guibg=#2c2d27
+" let &colorcolumn=join(range(81,120),",")
+" match WarningMsg '\%>80v.\+'
+" 
+" highlight OverLength ctermbg=red ctermfg=white guibg=#592929
+" function OverLength()
+"     match OverLength /\%81v.\+/
+" endfunction
+" function OverLength72()
+"     match OverLength /\%73v.\+/
+" endfunction
+" 
+" highlight FindColor ctermbg=red guibg=#592929
+" function Colorfind()
+"     "match FindColor  /\(\%#.*\)\@<=f/+2
+" endfunction
 
 " if vim is compiled with client-server use that otherwise use a loop
 " use --remote-expr {expr} to send a message that will tell vim to update it's
